@@ -1,3 +1,4 @@
+import choreotestorganization/accountservice;
 import choreotestorganization/consentservice;
 import ballerina/http;
 
@@ -10,17 +11,16 @@ service / on new http:Listener(9090) {
     resource function post accountAccessConsent(string clientID, string clientSecret) returns string|error {
         if clientID is "" || clientSecret is "" {
             return error("client ID or client secret can not be empty!");
+        } else {
+            consentservice:Client consentserviceEp = check new (clientConfig = {
+                auth: {
+                    clientId: clientID,
+                    clientSecret: clientSecret
+                }
+            });
+            string getCreateAccountConsentResponse = check consentserviceEp->getCreateaccountconsent();
+            return "Account Consent POST Service Invoked, Consent ID: " + getCreateAccountConsentResponse;
         }
-
-        consentservice:Client consentserviceEp = check new (clientConfig = {
-            auth: {
-                clientId: clientID,
-                clientSecret: clientSecret
-            }
-        });
-
-        string getCreateAccountConsentResponse = check consentserviceEp->getCreateaccountconsent();
-        return "Account Consent POST Service Invoked, Consent ID: " + getCreateAccountConsentResponse;
     }
 
     # A resource to return consent
@@ -35,9 +35,17 @@ service / on new http:Listener(9090) {
     # A resource to return consent
     # + return - consent response
     resource function get accounts(string clientID, string clientSecret) returns string|error {
-        if clientID is "" || clientSecret is "" {
+        if (!(clientID is "" || clientSecret is "")) {
+            accountservice:Client accountserviceEp = check new (clientConfig = {
+                auth: {
+                    clientId: clientID,
+                    clientSecret: clientSecret
+                }
+            });
+            string getAccountsResponse = check accountserviceEp->getAccounts();
+            return "Account Service Invoked, Account ID: "+ getAccountsResponse;
+        } else {
             return error("client ID or client secret can not be empty!");
         }
-        return "Account Service Invoked";
     }
 }

@@ -8,33 +8,41 @@ service / on new http:Listener(9090) {
 
     # A resource for generating consent
     # + return - consent response
-    resource function post accountAccessConsent(string clientID, string clientSecret) returns string|error {
-        if clientID is "" || clientSecret is "" {
-            return error("client ID or client secret can not be empty!");
-        } else {
+    resource function post accountAccessConsent(string clientID, string clientSecret, @http:Payload json consentResource) returns json|error {
+        if (!(clientID is "" || clientSecret is "")) {
             consentservice:Client consentserviceEp = check new (clientConfig = {
                 auth: {
                     clientId: clientID,
                     clientSecret: clientSecret
                 }
             });
-            string getCreateAccountConsentResponse = check consentserviceEp->getCreateaccountconsent();
-            return "Account Consent POST Service Invoked, Consent ID: " + getCreateAccountConsentResponse;
-        }
-    }
-
-    # A resource to return consent
-    # + return - consent response
-    resource function get accountAccessConsent(string clientID, string clientSecret) returns string|error {
-        if clientID is "" || clientSecret is "" {
+            json postAccountconsentResponse = check consentserviceEp->postAccountconsent(payload = consentResource);
+            return postAccountconsentResponse;
+        } else {
             return error("client ID or client secret can not be empty!");
         }
-        return "Account Consent GET Service Invoked";
     }
 
     # A resource to return consent
     # + return - consent response
-    resource function get accounts(string clientID, string clientSecret) returns string|error {
+    resource function get accountAccessConsent(string clientID, string clientSecret) returns json|error {
+        if (!(clientID is "" || clientSecret is "")) {
+            consentservice:Client consentserviceEp = check new (clientConfig = {
+                auth: {
+                    clientId: clientID,
+                    clientSecret: clientSecret
+                }
+            });
+            json getAccountconsentResponse = check consentserviceEp->getAccountconsent();
+            return getAccountconsentResponse;
+        } else {
+            return error("client ID or client secret can not be empty!");
+        }
+    }
+
+    # A resource to return consent
+    # + return - consent response
+    resource function get accounts(string clientID, string clientSecret) returns json|error {
         if (!(clientID is "" || clientSecret is "")) {
             accountservice:Client accountserviceEp = check new (clientConfig = {
                 auth: {
@@ -42,8 +50,25 @@ service / on new http:Listener(9090) {
                     clientSecret: clientSecret
                 }
             });
-            string getAccountsResponse = check accountserviceEp->getAccounts();
-            return "Account Service Invoked, Account ID: "+ getAccountsResponse;
+            json getAccountsResponse = check accountserviceEp->getAccounts();
+            return getAccountsResponse;
+        } else {
+            return error("client ID or client secret can not be empty!");
+        }
+    }
+
+    # A resource to return consent
+    # + return - consent response
+    resource function get transactions(string clientID, string clientSecret) returns json|error {
+        if (!(clientID is "" || clientSecret is "")) {
+            accountservice:Client accountserviceEp = check new (clientConfig = {
+                auth: {
+                    clientId: clientID,
+                    clientSecret: clientSecret
+                }
+            });
+            json getTransactionsResponse = check accountserviceEp->getTransactions();
+            return getTransactionsResponse;
         } else {
             return error("client ID or client secret can not be empty!");
         }

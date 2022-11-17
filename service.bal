@@ -6,14 +6,17 @@ import ballerina/http;
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
-    # A resource for generating consent
-    # + return - consent response
-    resource function post accountAccessConsent(string clientID, string clientSecret, @http:Payload json consentResource) returns json|error {
-        if (!(clientID is "" || clientSecret is "")) {
+    # The service to generate account consent resource.
+    # + clientID - Client ID of the consent servie.
+    # + clientSecret - Client Secret of the consent servie.
+    # + consentResource - Acoount consent payload.
+    # + return - Consent resource.
+    resource function post accountAccessConsent(string consentServiceClientID, string consentServiceClientSecret, @http:Payload json consentResource) returns json|error {
+        if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
             consentservice:Client consentserviceEp = check new (clientConfig = {
                 auth: {
-                    clientId: clientID,
-                    clientSecret: clientSecret
+                    clientId: consentServiceClientID,
+                    clientSecret: consentServiceClientSecret
                 }
             });
             json postAccountconsentResponse = check consentserviceEp->postAccountconsent(payload = consentResource);
@@ -23,31 +26,35 @@ service / on new http:Listener(9090) {
         }
     }
 
-    # A resource to return consent
-    # + return - consent response
-    resource function get accountAccessConsent(string clientID, string clientSecret) returns json|error {
-        if (!(clientID is "" || clientSecret is "")) {
+    # The service to return account consent resource
+    # + consentServiceClientID - Client ID of the consent servie.
+    # + consentServiceClientSecret - Client Secret of the consent servie.
+    # + return - Consent response.
+    resource function get accountAccessConsent(string consentServiceClientID, string consentServiceClientSecret) returns json|error {
+        if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
             consentservice:Client consentserviceEp = check new (clientConfig = {
                 auth: {
-                    clientId: clientID,
-                    clientSecret: clientSecret
+                    clientId: consentServiceClientID,
+                    clientSecret: consentServiceClientSecret
                 }
             });
             json getAccountconsentResponse = check consentserviceEp->getAccountconsent();
             return getAccountconsentResponse;
         } else {
-            return error("client ID or client secret can not be empty!");
+            return error("{ error_code: 403, error_description: client ID or client secret can not be empty!}");
         }
     }
 
-    # A resource to return consent
-    # + return - consent response
-    resource function get accounts(string clientID, string clientSecret) returns json|error {
-        if (!(clientID is "" || clientSecret is "")) {
+    # A service to return accounts resource.
+    # + backendServiceClientID - Client ID of the bank backend servie.
+    # + backendServiceClientSecret - Client Secret of the bank backend servie.
+    # + return - Account resource.
+    resource function get accounts(string backendServiceClientID, string backendServiceClientSecret) returns json|error {
+        if (!(backendServiceClientID is "" || backendServiceClientSecret is "")) {
             accountservice:Client accountserviceEp = check new (clientConfig = {
                 auth: {
-                    clientId: clientID,
-                    clientSecret: clientSecret
+                    clientId: backendServiceClientID,
+                    clientSecret: backendServiceClientSecret
                 }
             });
             json getAccountsResponse = check accountserviceEp->getAccounts();
@@ -57,14 +64,16 @@ service / on new http:Listener(9090) {
         }
     }
 
-    # A resource to return consent
-    # + return - consent response
-    resource function get transactions(string clientID, string clientSecret) returns json|error {
-        if (!(clientID is "" || clientSecret is "")) {
+    # A service to return transaction resource.
+    # + backendServiceClientID - Client ID of the bank backend servie.
+    # + backendServiceClientSecret - Client Secret of the bank backend servie.
+    # + return - Transaction resource.
+    resource function get transactions(string backendServiceClientID, string backendServiceClientSecret) returns json|error {
+        if (!(backendServiceClientID is "" || backendServiceClientSecret is "")) {
             accountservice:Client accountserviceEp = check new (clientConfig = {
                 auth: {
-                    clientId: clientID,
-                    clientSecret: clientSecret
+                    clientId: backendServiceClientID,
+                    clientSecret: backendServiceClientSecret
                 }
             });
             json getTransactionsResponse = check accountserviceEp->getTransactions();

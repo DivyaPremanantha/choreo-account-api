@@ -7,8 +7,8 @@ import ballerina/http;
 service / on new http:Listener(9090) {
 
     # The service to generate account consent resource.
-    # + clientID - Client ID of the consent servie.
-    # + clientSecret - Client Secret of the consent servie.
+    # + consentServiceClientID - Client ID of the consent servie.
+    # + consentServiceClientSecret - Client Secret of the consent servie.
     # + consentResource - Acoount consent payload.
     # + return - Consent resource.
     resource function post accountAccessConsent(string consentServiceClientID, string consentServiceClientSecret, @http:Payload json consentResource) returns json|error {

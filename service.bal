@@ -1,5 +1,6 @@
 import choreotestorganization/accountservice;
 import choreotestorganization/consentservice;
+import ballerina/io;
 import ballerina/http;
 
 # A service representing a network-accessible API
@@ -12,6 +13,8 @@ service / on new http:Listener(9090) {
     # + consentResource - Acoount consent payload.
     # + return - Consent resource.
     resource function post accountAccessConsent(@http:Header string consentServiceClientID, @http:Header string consentServiceClientSecret, @http:Payload json consentResource) returns json|error {
+        io:println("came");
+        io:println(consentServiceClientID);
         if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
             consentservice:Client consentserviceEp = check new (clientConfig = {
                 auth: {

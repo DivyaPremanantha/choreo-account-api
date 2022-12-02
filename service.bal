@@ -11,7 +11,7 @@ service / on new http:Listener(9090) {
     # + consentServiceClientSecret - Client Secret of the consent servie.
     # + consentResource - Acoount consent payload.
     # + return - Consent resource.
-    resource function post accountAccessConsent(string consentServiceClientID, string consentServiceClientSecret, @http:Payload json consentResource) returns json|error {
+    resource function post accountAccessConsent(@http:Header string consentServiceClientID, @http:Header string consentServiceClientSecret, @http:Payload json consentResource) returns json|error {
         if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
             consentservice:Client consentserviceEp = check new (clientConfig = {
                 auth: {
@@ -30,7 +30,7 @@ service / on new http:Listener(9090) {
     # + consentServiceClientID - Client ID of the consent servie.
     # + consentServiceClientSecret - Client Secret of the consent servie.
     # + return - Consent response.
-    resource function get accountAccessConsent(string consentServiceClientID, string consentServiceClientSecret) returns json|error {
+    resource function get accountAccessConsent(@http:Header string consentServiceClientID, @http:Header string consentServiceClientSecret) returns json|error {
         if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
             consentservice:Client consentserviceEp = check new (clientConfig = {
                 auth: {
@@ -49,7 +49,7 @@ service / on new http:Listener(9090) {
     # + backendServiceClientID - Client ID of the bank backend servie.
     # + backendServiceClientSecret - Client Secret of the bank backend servie.
     # + return - Account resource.
-    resource function get accounts(string backendServiceClientID, string backendServiceClientSecret) returns json|error {
+    resource function get accounts(@http:Header string backendServiceClientID, @http:Header string backendServiceClientSecret) returns json|error {
         if (!(backendServiceClientID is "" || backendServiceClientSecret is "")) {
             accountservice:Client accountserviceEp = check new (clientConfig = {
                 auth: {
@@ -68,7 +68,7 @@ service / on new http:Listener(9090) {
     # + backendServiceClientID - Client ID of the bank backend servie.
     # + backendServiceClientSecret - Client Secret of the bank backend servie.
     # + return - Transaction resource.
-    resource function get transactions(string backendServiceClientID, string backendServiceClientSecret) returns json|error {
+    resource function get transactions(@http:Header string backendServiceClientID, @http:Header string backendServiceClientSecret) returns json|error {
         if (!(backendServiceClientID is "" || backendServiceClientSecret is "")) {
             accountservice:Client accountserviceEp = check new (clientConfig = {
                 auth: {

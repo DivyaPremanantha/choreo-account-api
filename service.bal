@@ -51,7 +51,7 @@ service / on new http:Listener(9090) {
     # + return - Account resource.
     resource function get accounts(@http:Header string backendServiceClientID, @http:Header string backendServiceClientSecret) returns json|error {
         if (!(backendServiceClientID is "" || backendServiceClientSecret is "")) {
-            accountservice:Client accountserviceEp = check new (clientConfig = {
+            accountservice:Client accountserviceEp = check new (config = {
                 auth: {
                     clientId: backendServiceClientID,
                     clientSecret: backendServiceClientSecret
@@ -70,7 +70,7 @@ service / on new http:Listener(9090) {
     # + return - Transaction resource.
     resource function get transactions(@http:Header string backendServiceClientID, @http:Header string backendServiceClientSecret) returns json|error {
         if (!(backendServiceClientID is "" || backendServiceClientSecret is "")) {
-            accountservice:Client accountserviceEp = check new (clientConfig = {
+            accountservice:Client accountserviceEp = check new (config = {
                 auth: {
                     clientId: backendServiceClientID,
                     clientSecret: backendServiceClientSecret

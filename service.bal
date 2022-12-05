@@ -1,4 +1,5 @@
 import choreotestorganization/accountservice;
+import choreotestorganization/consentservice;
 import ballerina/http;
 
 # A service representing a network-accessible API
@@ -12,7 +13,14 @@ service / on new http:Listener(9090) {
     # + return - Consent resource.
     resource function post accountAccessConsent(@http:Header string consentServiceClientID, @http:Header string consentServiceClientSecret, @http:Payload json consentResource) returns json|error {
         if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
-
+            consentservice:Client consentserviceEp = check new (config = {
+                auth: {
+                    clientId: consentServiceClientID,
+                    clientSecret: consentServiceClientSecret
+                }
+            });
+            json postAccountconsentResponse = check consentserviceEp->postAccountconsent(payload = consentResource);
+            return postAccountconsentResponse;
         } else {
             return error("client ID or client secret can not be empty!");
         }
@@ -24,7 +32,14 @@ service / on new http:Listener(9090) {
     # + return - Consent response.
     resource function get accountAccessConsent(@http:Header string consentServiceClientID, @http:Header string consentServiceClientSecret) returns json|error {
         if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
-
+            consentservice:Client consentserviceEp = check new (config = {
+                auth: {
+                    clientId: consentServiceClientID,
+                    clientSecret: consentServiceClientSecret
+                }
+            });
+            json getAccountconsentResponse = check consentserviceEp->getAccountconsent();
+            return getAccountconsentResponse;
         } else {
             return error("{ error_code: 403, error_description: client ID or client secret can not be empty!}");
         }

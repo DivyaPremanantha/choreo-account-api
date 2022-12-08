@@ -9,7 +9,7 @@ service / on new http:Listener(9090) {
     # The service to generate account consent resource.
     # + consentServiceClientID - Client ID of the consent servie.
     # + consentServiceClientSecret - Client Secret of the consent servie.
-    # + consentResource - Acoount consent payload.
+    # + consentResource - Account consent payload.
     # + return - Consent resource.
     resource function post accountAccessConsent(@http:Header string consentServiceClientID, @http:Header string consentServiceClientSecret, @http:Payload json consentResource) returns json|error {
         if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {

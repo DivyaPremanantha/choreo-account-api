@@ -2,16 +2,18 @@ import choreotestorganization/accountservice;
 import choreotestorganization/consentservice;
 import ballerina/http;
 
+configurable string consentServiceClientID = ?;
+configurable string consentServiceClientSecret = ?;
+configurable string backendServiceClientID = ?;
+configurable string backendServiceClientSecret = ?;
 # A service representing a network-accessible API
 # bound to port `9090`.
 service / on new http:Listener(9090) {
 
     # The service to generate account consent resource.
-    # + consentServiceClientID - Client ID of the consent servie.
-    # + consentServiceClientSecret - Client Secret of the consent servie.
     # + consentResource - Account consent payload.
     # + return - Consent resource.
-    resource function post accountAccessConsent(@http:Header string consentServiceClientID, @http:Header string consentServiceClientSecret, @http:Payload json consentResource) returns json|error {
+    resource function post accountAccessConsent(@http:Payload json consentResource) returns json|error {
         if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
             consentservice:Client consentserviceEp = check new (config = {
                 auth: {
@@ -27,10 +29,8 @@ service / on new http:Listener(9090) {
     }
 
     # The service to return account consent resource
-    # + consentServiceClientID - Client ID of the consent servie.
-    # + consentServiceClientSecret - Client Secret of the consent servie.
     # + return - Consent response.
-    resource function get accountAccessConsent(@http:Header string consentServiceClientID, @http:Header string consentServiceClientSecret) returns json|error {
+    resource function get accountAccessConsent() returns json|error {
         if (!(consentServiceClientID is "" || consentServiceClientSecret is "")) {
             consentservice:Client consentserviceEp = check new (config = {
                 auth: {
@@ -46,10 +46,8 @@ service / on new http:Listener(9090) {
     }
 
     # A service to return accounts resource.
-    # + backendServiceClientID - Client ID of the bank backend servie.
-    # + backendServiceClientSecret - Client Secret of the bank backend servie.
     # + return - Account resource.
-    resource function get accounts(@http:Header string backendServiceClientID, @http:Header string backendServiceClientSecret) returns json|error {
+    resource function get accounts() returns json|error {
         if (!(backendServiceClientID is "" || backendServiceClientSecret is "")) {
             accountservice:Client accountserviceEp = check new (config = {
                 auth: {
@@ -65,10 +63,8 @@ service / on new http:Listener(9090) {
     }
 
     # A service to return transaction resource.
-    # + backendServiceClientID - Client ID of the bank backend servie.
-    # + backendServiceClientSecret - Client Secret of the bank backend servie.
     # + return - Transaction resource.
-    resource function get transactions(@http:Header string backendServiceClientID, @http:Header string backendServiceClientSecret) returns json|error {
+    resource function get transactions() returns json|error {
         if (!(backendServiceClientID is "" || backendServiceClientSecret is "")) {
             accountservice:Client accountserviceEp = check new (config = {
                 auth: {
